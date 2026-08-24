@@ -9,30 +9,40 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                echo 'Checking out source code...'
                 checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Compile') {
             steps {
-                bat 'mvn clean package'
+                echo 'Compiling application...'
+                bat 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
+                echo 'Running unit tests...'
                 bat 'mvn test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo 'Packaging application...'
+                bat 'mvn package -DskipTests'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'CI Pipeline completed successfully!'
         }
 
         failure {
-            echo 'Pipeline failed!'
+            echo 'CI Pipeline failed!'
         }
     }
 }
